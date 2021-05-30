@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="h1">36sp</dimen>
+    <dimen name="h2">30sp</dimen>
+    <dimen name="margin">36dp</dimen>
+    <dimen name="margin_half">18dp</dimen>
+    <dimen name="minWidth">270dp</dimen>
+    <dimen name="maxHeight">270dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>

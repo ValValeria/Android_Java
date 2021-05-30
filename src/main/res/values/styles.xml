@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="h1">
+    <item name="android:textSize">@dimen/h1</item>
+    <item name="android:textColor">@color/dark_grey</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:paddingBottom">@dimen/margin</item>
+    <item name="android:paddingTop">@dimen/margin</item>
+</style>
+</resources>
