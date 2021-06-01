@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+    private View view;
 
     public LoginFragment(){
         super(R.layout.fragment_login);
@@ -30,40 +31,47 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.view = view;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         if(firebaseUser != null){
             Toast.makeText(getActivity(), "You has already authenticated", Toast.LENGTH_LONG);
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
         }
+
+        Runnable runnable = () -> {
+            TextInputEditText textInputEditText = getActivity().findViewById(R.id.loginEmail);
+            TextInputEditText textInputEditText1 = getActivity().findViewById(R.id.loginPassword);
+
+            String email = textInputEditText.getText().toString();
+            String password = textInputEditText1.getText().toString();
+
+            firebaseAuth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(getActivity(), task -> {
+                        if (task.isSuccessful()) {
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                        } else {
+                            view.post(()->{
+                                Toast.makeText(getActivity(), "You are not in our database",
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    });
+        };
 
         Button button = getActivity().findViewById(R.id.login_btn);
         button.setOnClickListener(v->{
-            Runnable runnable = () -> {
-                TextInputEditText textInputEditText = getActivity().findViewById(R.id.loginEmail);
-                TextInputEditText textInputEditText1 = getActivity().findViewById(R.id.loginPassword);
-
-                String email = textInputEditText.getText().toString();
-                String password = textInputEditText1.getText().toString();
-
-                firebaseAuth.signInWithEmailAndPassword(email,password)
-                        .addOnCompleteListener(getActivity(), task -> {
-                            if (task.isSuccessful()) {
-                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
-                            } else {
-                                view.post(()->{
-                                    Toast.makeText(getActivity(), "You are not in our database",
-                                            Toast.LENGTH_SHORT).show();
-                                });
-                            }
-                        });
-            };
-
+            System.out.println("login");
             new Thread(runnable).start();
         });
 
-        MaterialCardView materialCardView = getActivity().findViewById(R.id.message_login);
-        materialCardView.setOnClickListener(v->{
+        getActivity().findViewById(R.id.message_login).setOnClickListener(v->{
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.signupFragment);
         });
     }

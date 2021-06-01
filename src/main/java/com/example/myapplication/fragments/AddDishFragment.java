@@ -16,6 +16,9 @@ import com.example.myapplication.R;
 import com.example.myapplication.data.DishesViewModel;
 import com.example.myapplication.models.Dish;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class AddDishFragment extends Fragment {
+    private DatabaseReference databaseReference;
+    private final String DISH = "DISH";
+
     public AddDishFragment(){
           super(R.layout.fragment_additem);
       }
@@ -41,6 +47,8 @@ public class AddDishFragment extends Fragment {
                 addItem(v);
             }
         });
+
+        databaseReference = FirebaseDatabase.getInstance().getReference(DISH);
     }
 
     @Override
@@ -96,6 +104,14 @@ public class AddDishFragment extends Fragment {
 
                       Toast toast = Toast.makeText(requireActivity(), "The recipe is added", Toast.LENGTH_LONG);
                       toast.show();
+
+                      Runnable runnable = () -> {
+                          String key = databaseReference.push().getKey();
+                          dish.setKey(key);
+                          databaseReference.push().setValue(dish);
+                      };
+
+                      new Thread(runnable).start();
                   } else {
                       ListView listView = view.getRootView().findViewById(R.id.listErrors);
                       ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, new ArrayList());

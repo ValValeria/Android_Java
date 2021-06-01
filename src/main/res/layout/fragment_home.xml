@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/margin"
     tools:context=".fragments.HomeFragment">
 
     <TextView
@@ -14,13 +15,45 @@
         android:text="@string/home_title"
         android:textAlignment="center"
         android:layout_gravity="center"
-        android:textSize="@dimen/h2"
         android:paddingTop="@dimen/margin"
-        android:textColor="@color/dark_grey"
+        android:textAppearance="?attr/textAppearanceHeadline1"
+        android:textAllCaps="false"
+        style="@style/h2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/homeCardGreeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:strokeWidth="3dp"
+        android:padding="@dimen/margin_half"
+        app:strokeColor="@color/light_white"
+        app:cardElevation="0dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?attr/textAppearanceHeadline1"
+                android:layout_gravity="left"
+                android:textAllCaps="false"
+                android:text="Dear user, your email is"
+                android:paddingLeft="@dimen/margin"
+                android:paddingRight="@dimen/margin"
+                style="@style/h5"
+                />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <ListView
         android:id="@+id/dishesList"
@@ -28,8 +61,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        android:padding="@dimen/margin"
+        app:layout_constraintTop_toBottomOf="@id/homeCardGreeting"
+        android:layout_marginTop="@dimen/margin"
         >
     </ListView>
 

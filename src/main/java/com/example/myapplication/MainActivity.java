@@ -27,9 +27,6 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements LifecycleObserver{
-    private List<Dish> dishes = new LinkedList<>();
-    private DatabaseReference databaseReference;
-    private final String DISH = "DISH";
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private NavController navController;
@@ -39,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference(DISH);
 
         Intent intent = new Intent(this, DatabaseService.class);
         startService(intent);
@@ -54,22 +49,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
-
-        DishesViewModel dishesViewModel = new ViewModelProvider(this).get(DishesViewModel.class);
-
-        dishesViewModel.getMutableLiveData().observe(this, lists->{
-            if(lists != null){
-                for (int i = 0; i < lists.size(); i++) {
-                    Dish dish = lists.get(i);
-
-                    if(!dishes.contains(dish)){
-                        addNewDishToDb(dish);
-                    }
-                }
-
-                this.dishes = lists;
-            }
-        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -92,14 +71,5 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
             return false;
         });
-    }
-
-    private void addNewDishToDb(Dish dish) {
-        Runnable runnable = () -> {
-            System.out.println("Added a new dish");
-            databaseReference.push().setValue(dish);
-        };
-
-        new Thread(runnable).start();
     }
 }

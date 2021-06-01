@@ -2,6 +2,7 @@ package com.example.myapplication.models;
 
 public class Dish {
     private int id;
+    private String key;
     private String title;
     private String description;
     private String ingredients;
@@ -36,5 +37,13 @@ public class Dish {
 
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public void setKey(String key){
+        this.key = key;
+    }
+
+    public String getKey(){
+        return this.key;
     }
 }

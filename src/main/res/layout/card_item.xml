@@ -15,7 +15,8 @@
         android:checkable="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeWidth="1dp"
+        app:strokeWidth="3dp"
+        android:padding="@dimen/margin_half"
         app:strokeColor="@color/light_white"
         app:cardElevation="0dp"
         >
