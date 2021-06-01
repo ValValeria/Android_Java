@@ -88,10 +88,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
                 case R.id.home:
                     navController.navigate(R.id.homeFragment);
                     break;
-                case R.id.recipies_list:
-                    break;
-                case R.id.favorities:
-                    break;
             }
 
             return false;
@@ -99,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     }
 
     private void addNewDishToDb(Dish dish) {
-        databaseReference.push().setValue(dish);
+        Runnable runnable = () -> {
+            System.out.println("Added a new dish");
+            databaseReference.push().setValue(dish);
+        };
+
+        new Thread(runnable).start();
     }
 }

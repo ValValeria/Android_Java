@@ -7,4 +7,19 @@
     <item name="android:paddingBottom">@dimen/margin</item>
     <item name="android:paddingTop">@dimen/margin</item>
 </style>
+    <style name="h2" parent="h1">
+        <item name="android:textSize">@dimen/h2</item>
+    </style>
+
+    <style name="h3" parent="h1">
+        <item name="android:textSize">@dimen/h3</item>
+    </style>
+
+    <style name="h4" parent="h1">
+        <item name="android:textSize">@dimen/h4</item>
+    </style>
+
+    <style name="h5" parent="h1">
+        <item name="android:textSize">@dimen/h5</item>
+    </style>
 </resources>

@@ -2,6 +2,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="h1">36sp</dimen>
     <dimen name="h2">30sp</dimen>
+    <dimen name="h3">24sp</dimen>
+    <dimen name="h4">20sp</dimen>
+    <dimen name="h5">17sp</dimen>
     <dimen name="margin">36dp</dimen>
     <dimen name="margin_half">18dp</dimen>
     <dimen name="minWidth">270dp</dimen>
