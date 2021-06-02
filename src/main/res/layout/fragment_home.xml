@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         android:paddingTop="@dimen/margin"
         android:textAppearance="?attr/textAppearanceHeadline1"
-        android:textAllCaps="false"
+        android:textAllCaps="true"
         style="@style/h2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -65,16 +65,5 @@
         android:layout_marginTop="@dimen/margin"
         >
     </ListView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/fab_content_desc"
-        app:backgroundTint="@color/white"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/plus"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

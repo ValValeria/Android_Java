@@ -17,6 +17,6 @@
     <string name="search">Search</string>
     <string name="read_more">Read more</string>
     <string name="recipies_page">Your recipies</string>
-    <string name="favorite_page">Favorites</string>
+    <string name="favorite_page">New dish</string>
     <string name="fab_content_desc">Add a new recipy</string>
 </resources>

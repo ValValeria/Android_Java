@@ -1,7 +1,5 @@
 package com.example.myapplication.fragments;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -9,27 +7,28 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.DishesAdapter;
 import com.example.myapplication.data.DishesViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.myapplication.models.Dish;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import java.util.List;
+
 
 public class HomeFragment extends Fragment{
     private DishesViewModel dishesViewModel;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private String email;
-
+    private List<Dish> dishList;
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -39,10 +38,28 @@ public class HomeFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         dishesViewModel = new ViewModelProvider(requireActivity()).get(DishesViewModel.class);
+        dishList = dishesViewModel.getMutableLiveData().getValue();
 
-        new HomeFragment.DishesAsyncTask().execute();
+        final Observer<List<Dish>> observer = dishes -> {
+              if(dishes.size()>0){
+                  dishList.addAll(dishes);
+              }
+
+              System.out.println("added");
+        };
+
+        dishesViewModel.getMutableLiveData().observe(getActivity(), observer);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        ListView listView = view.findViewById(R.id.dishesList);
+
+        DishesAdapter dishesAdapter = new DishesAdapter(view.getContext(),
+                R.layout.card_item, dishList, navController);
+        listView.setAdapter(dishesAdapter);
+    }
 
     @Override
     public void onStart() {
@@ -65,27 +82,6 @@ public class HomeFragment extends Fragment{
 
             TextView textView = getActivity().findViewById(R.id.userEmail);
             textView.setText(string, TextView.BufferType.SPANNABLE);
-        }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-       NavController navController = Navigation.findNavController(view);
-       ListView listView = view.findViewById(R.id.dishesList);
-
-       DishesAdapter dishesAdapter = new DishesAdapter(view.getContext(),
-                R.layout.card_item, dishesViewModel.getMutableLiveData().getValue(), navController);
-       listView.setAdapter(dishesAdapter);
-
-       FloatingActionButton button = view.findViewById(R.id.floating_action_button);
-       button.setOnClickListener(v -> navController.navigate(R.id.addItemFragment));
-    }
-
-    private class DishesAsyncTask  extends AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
         }
     }
 }

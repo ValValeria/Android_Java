@@ -31,6 +31,7 @@ import io.reactivex.disposables.Disposable;
 public class AddDishFragment extends Fragment {
     private DatabaseReference databaseReference;
     private final String DISH = "DISH";
+    private static int countOfVisists = 0;
 
     public AddDishFragment(){
           super(R.layout.fragment_additem);
@@ -41,14 +42,15 @@ public class AddDishFragment extends Fragment {
         super.onStart();
 
         Button button = this.getActivity().findViewById(R.id.click);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addItem(v);
-            }
-        });
+        button.setOnClickListener(this::addItem);
 
         databaseReference = FirebaseDatabase.getInstance().getReference(DISH);
+
+        countOfVisists++;
+
+        if(countOfVisists == 1){
+            new WarningDialogFragment().show(getParentFragmentManager(), WarningDialogFragment.getTagName());
+        }
     }
 
     @Override

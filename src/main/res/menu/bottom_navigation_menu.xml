@@ -3,13 +3,19 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:title="@string/home_page"/>
+        android:title="@string/home_page"
+        android:icon="@drawable/ic_baseline_home_24"
+        />
     <item
         android:id="@+id/recipies_list"
         android:enabled="true"
-        android:title="@string/recipies_page"/>
+        android:title="@string/recipies_page"
+        android:icon="@drawable/list"
+        />
     <item
-        android:id="@+id/favorities"
+        android:id="@+id/addItem"
         android:enabled="true"
-        android:title="@string/favorite_page"/>
+        android:title="@string/favorite_page"
+        android:icon="@drawable/add"
+        />
 </menu>

@@ -20,6 +20,7 @@ public class DishesAdapter  extends ArrayAdapter<Dish> {
     private List<Dish> dishes;
     private Context context;
     private NavController navController;
+    private final String KEY = "KEY";
 
     public DishesAdapter(Context context, int resource, List<Dish> dishes, NavController navController){
        super(context,resource, dishes);
@@ -43,7 +44,7 @@ public class DishesAdapter  extends ArrayAdapter<Dish> {
         MaterialButton materialButton = view.findViewById(R.id.btn);
         materialButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", dish.getId());
+            bundle.putString(KEY, dish.getKey());
 
             navController.navigate(R.id.secondaryFragment, bundle);
         });

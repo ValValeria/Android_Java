@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.data.DishesViewModel;
 import com.example.myapplication.models.Dish;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,7 @@ public class DatabaseService extends Service {
                 for (DataSnapshot datasnapShot: snapshot.getChildren()) {
                     Dish dish = datasnapShot.getValue(Dish.class);
                     data.add(dish);
+                    DishesViewModel.getPublishSubject().onNext(dish);
                 }
             }
 

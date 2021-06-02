@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -16,6 +18,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.myapplication.data.DishesViewModel;
 import com.example.myapplication.models.Dish;
 import com.example.myapplication.services.DatabaseService;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,6 +61,24 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             Toast.makeText(this, "You are not authenticated", Toast.LENGTH_LONG);
             navController.navigate(R.id.loginFragment);
         }
+
+        MaterialToolbar materialToolbar = findViewById(R.id.topAppBar);
+        materialToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_logout:
+                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                        if(firebaseUser != null){
+                            FirebaseAuth.getInstance().getCurrentUser().delete();
+                            navController.navigate(R.id.signupFragment);
+                        }
+                }
+
+                return false;
+            }
+        });
     }
 
     public void addEventHandler(){
@@ -67,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
                 case R.id.home:
                     navController.navigate(R.id.homeFragment);
                     break;
+                case R.id.addItem:
+                    navController.navigate(R.id.addItemFragment);
             }
 
             return false;
