@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,20 +38,27 @@ public class SecondaryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.ID = requireArguments().getString(KEY);
-        dishesViewModel = new ViewModelProvider(requireActivity()).get(DishesViewModel.class);
-
-        dishesViewModel.getMutableLiveData().getValue().forEach(v -> {
-            if(v.getKey().equalsIgnoreCase(ID)){
-                dish = v;
-                ingredientsList = Arrays.asList(dish.getIngredients().split(","));
-            }
-        });
+        this.ID = getArguments().getString(KEY);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        dishesViewModel = new ViewModelProvider(getActivity()).get(DishesViewModel.class);
+
+        dishesViewModel.getMutableLiveData().getValue().forEach(v -> {
+            if(v.getKey().equalsIgnoreCase(ID)){
+                dish = v;
+                String[] ingredients = dish.getIngredients().split(",");
+
+                if(ingredients.length > 0){
+                    ingredientsList = Arrays.asList(dish.getIngredients().split(","));
+                } else {
+                    Toast.makeText(getContext(), "No ingredients", Toast.LENGTH_LONG);
+                }
+            }
+        });
 
         TextView textView = view.findViewById(R.id.dishTitle);
         textView.setText(dish.getTitle());

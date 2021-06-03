@@ -18,7 +18,6 @@ public class DishesAdapter  extends ArrayAdapter<Dish> {
     private LayoutInflater inflater;
     private int layout;
     private List<Dish> dishes;
-    private Context context;
     private NavController navController;
     private final String KEY = "KEY";
 
