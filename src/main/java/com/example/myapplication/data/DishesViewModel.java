@@ -1,24 +1,18 @@
 package com.example.myapplication.data;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.myapplication.models.Dish;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.subjects.ReplaySubject;
+
 
 public class DishesViewModel extends ViewModel {
     private final MutableLiveData<List<Dish>> mutableLiveData = new MutableLiveData<>();
-    private final static PublishSubject<Dish> publishSubject = PublishSubject.create();
+    private final static ReplaySubject<Dish> publishSubject = ReplaySubject.create();
 
     public DishesViewModel() {
         super();
@@ -54,7 +48,7 @@ public class DishesViewModel extends ViewModel {
         return mutableLiveData;
     }
 
-    public static PublishSubject<Dish> getPublishSubject(){
+    public static ReplaySubject<Dish> getPublishSubject(){
         return DishesViewModel.publishSubject;
     }
 }

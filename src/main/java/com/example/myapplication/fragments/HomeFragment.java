@@ -1,12 +1,13 @@
 package com.example.myapplication.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -15,29 +16,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.DishesAdapter;
 import com.example.myapplication.data.DishesViewModel;
 import com.example.myapplication.models.Dish;
+import com.example.myapplication.services.DatabaseService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 
 public class HomeFragment extends Fragment{
-    private DishesViewModel dishesViewModel;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private List<Dish> dishList;
+    private List<Dish> dishList = new ArrayList<>();
     private ProgressBar progressBar;
     private ListView listView;
     private DishesAdapter dishesAdapter;
-
+    private int spacing;
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -46,43 +48,57 @@ public class HomeFragment extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dishesViewModel = new ViewModelProvider(requireActivity()).get(DishesViewModel.class);
-        dishList = dishesViewModel.getMutableLiveData().getValue();
+        Intent intent = new Intent(getActivity(), DatabaseService.class);
+        getActivity().startService(intent);
+
+        spacing = (int) getResources().getDimension(R.dimen.margin_half);
     }
 
+    @SuppressLint("CheckResult")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-        listView = getActivity().findViewById(R.id.dishesList);
-        progressBar = getActivity().findViewById(R.id.indicator);
 
-        dishesAdapter = new DishesAdapter(view.getContext(),
-                R.layout.card_item, dishList, navController);
+        listView = getActivity().findViewById(R.id.dishesList);
+        dishesAdapter = new DishesAdapter(view.getContext(), R.layout.card_item, dishList, navController);
         listView.setAdapter(dishesAdapter);
 
+        progressBar = getActivity().findViewById(R.id.indicator);
+
         if(listView.getAdapter().isEmpty()){
-            progressBar.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.INVISIBLE);
         }
 
-        final Observer<List<Dish>> observer = dishes -> {
-            for (int i = 0; i < dishes.size(); i++) {
-                 Dish dish = dishes.get(i);
+        DishesViewModel.getPublishSubject()
+                .distinct()
+                .filter(v -> {
+                    boolean isUnique = true;
 
-                for (int j = 0; j < dishList.size(); j++) {
-                     if(!dishList.get(i).getKey().equalsIgnoreCase(dish.getKey())){
-                         dishList.add(dish);
-                         addPostCount(dishList.size());
-                     }
-                }
-            }
+                    for (int i = 0; i < dishList.size(); i++) {
+                         Dish v1 = dishList.get(i);
 
-            if(dishList.size()> 0 && progressBar.getVisibility() == View.VISIBLE){
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        };
+                         if(v1.getKey().equals(v.getKey())){
+                             isUnique = false;
+                         }
+                    }
 
-        dishesViewModel.getMutableLiveData().observe(getActivity(), observer);
+                    return isUnique;
+                })
+                .subscribe(v -> {
+                    dishesAdapter.add(v);
+                    dishList.add(v);
+
+                    Set set = new LinkedHashSet(dishList);
+                    set.add(v);
+                    dishList.clear();
+                    dishList.addAll(set);
+
+                    addPostCount(dishList.size());
+
+                    progressBar.setVisibility(View.INVISIBLE);
+                    listView.setVisibility(View.VISIBLE);
+                });
     }
 
     @Override

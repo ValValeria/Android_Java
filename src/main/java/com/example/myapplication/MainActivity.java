@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, DatabaseService.class);
-        startService(intent);
-
         this.addEventHandler();
     }
 

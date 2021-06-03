@@ -16,7 +16,6 @@ public class WarningDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         return new AlertDialog.Builder(requireContext())
                 .setMessage("The ingredients must be separated with comas")
-                .setPositiveButton("Ok", (dialog, which) -> {} )
                 .create();
     }
 
