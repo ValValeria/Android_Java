@@ -19,4 +19,5 @@
     <string name="recipies_page">Your recipies</string>
     <string name="favorite_page">New dish</string>
     <string name="fab_content_desc">Add a new recipy</string>
+    <string name="search_hint">Search</string>
 </resources>

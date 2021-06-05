@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment{
     private ListView listView;
     private DishesAdapter dishesAdapter;
     private int spacing;
+    private final int DISHES_MAX_COUNT = 1;
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment{
                     for (int i = 0; i < dishList.size(); i++) {
                          Dish v1 = dishList.get(i);
 
-                         if(v1.getKey().equals(v.getKey())){
+                         if(v1.getKey().equals(v.getKey()) && dishList.size() < DISHES_MAX_COUNT){
                              isUnique = false;
                          }
                     }
@@ -86,18 +87,20 @@ public class HomeFragment extends Fragment{
                     return isUnique;
                 })
                 .subscribe(v -> {
-                    dishesAdapter.add(v);
-                    dishList.add(v);
+                    if(dishList.size() < DISHES_MAX_COUNT){
+                        dishesAdapter.add(v);
+                        dishList.add(v);
 
-                    Set set = new LinkedHashSet(dishList);
-                    set.add(v);
-                    dishList.clear();
-                    dishList.addAll(set);
+                        Set set = new LinkedHashSet(dishList);
+                        set.add(v);
+                        dishList.clear();
+                        dishList.addAll(set);
 
-                    addPostCount(dishList.size());
+                        addPostCount(dishList.size());
 
-                    progressBar.setVisibility(View.INVISIBLE);
-                    listView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        listView.setVisibility(View.VISIBLE);
+                    }
                 });
     }
 

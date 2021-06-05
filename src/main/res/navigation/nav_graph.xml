@@ -42,4 +42,10 @@
         android:name="com.example.myapplication.fragments.SignUp_Fragment"
         android:label="Login"
         tools:layout="@layout/fragment_sign_up" />
+
+    <fragment
+        android:id="@+id/listDishFragment"
+        android:name="com.example.myapplication.fragments.ListDishFragment"
+        android:label="Lists"
+        tools:layout="@layout/fragment_list_dish" />
 </navigation>
