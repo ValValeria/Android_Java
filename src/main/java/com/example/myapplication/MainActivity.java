@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+
+import com.example.myapplication.data.DishesViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,21 +48,18 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         }
 
         MaterialToolbar materialToolbar = findViewById(R.id.topAppBar);
-        materialToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.action_logout:
-                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        materialToolbar.setOnMenuItemClickListener(item -> {
+            switch(item.getItemId()){
+                case R.id.action_logout:
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                        if(firebaseUser != null){
-                            FirebaseAuth.getInstance().getCurrentUser().delete();
-                            navController.navigate(R.id.signupFragment);
-                        }
-                }
-
-                return false;
+                    if(firebaseUser != null){
+                        FirebaseAuth.getInstance().getCurrentUser().delete();
+                        navController.navigate(R.id.signupFragment);
+                    }
             }
+
+            return false;
         });
     }
 

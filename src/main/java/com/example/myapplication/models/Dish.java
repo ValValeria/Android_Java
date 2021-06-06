@@ -1,14 +1,18 @@
 package com.example.myapplication.models;
 
 public class Dish {
-    private int id;
     private String key;
     private String title;
     private String description;
     private String ingredients;
+    private String userUid;
 
-    public int getId() {
-        return id;
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
     public String getTitle() {
@@ -21,10 +25,6 @@ public class Dish {
 
     public String getIngredients() {
         return ingredients;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {

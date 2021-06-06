@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class HomeFragment extends Fragment{
@@ -71,6 +72,9 @@ public class HomeFragment extends Fragment{
             listView.setVisibility(View.INVISIBLE);
         }
 
+        AtomicInteger atomicInteger = new AtomicInteger();
+        atomicInteger.set(0);
+
         DishesViewModel.getPublishSubject()
                 .distinct()
                 .filter(v -> {
@@ -87,6 +91,8 @@ public class HomeFragment extends Fragment{
                     return isUnique;
                 })
                 .subscribe(v -> {
+                    atomicInteger.set(atomicInteger.get()+1);
+
                     if(dishList.size() < DISHES_MAX_COUNT){
                         dishesAdapter.add(v);
                         dishList.add(v);
@@ -95,12 +101,11 @@ public class HomeFragment extends Fragment{
                         set.add(v);
                         dishList.clear();
                         dishList.addAll(set);
-
-                        addPostCount(dishList.size());
-
                         progressBar.setVisibility(View.INVISIBLE);
                         listView.setVisibility(View.VISIBLE);
                     }
+
+                    addPostCount(atomicInteger.get());
                 });
     }
 
@@ -128,6 +133,9 @@ public class HomeFragment extends Fragment{
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         TextView textView = getActivity().findViewById(R.id.userEmail);
-        textView.setText(spannableString, TextView.BufferType.SPANNABLE);
+
+        if(textView != null){
+            textView.setText(spannableString, TextView.BufferType.SPANNABLE);
+        }
     }
 }

@@ -12,7 +12,6 @@
         android:clickable="true"
         android:focusable="true"
         android:checkable="true"
-        android:layout_marginBottom="@dimen/margin_half"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeWidth="3dp"
@@ -33,36 +32,23 @@
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
-                    android:id="@+id/title_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:text="Warning"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:id="@+id/long_description_card"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"
+                    android:text="The ingredients must be separated with comas"
                     />
 
-            </LinearLayout>
-
-            <!-- Buttons -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/read_more"
-                    android:id="@+id/btn"
-                    />
             </LinearLayout>
 
         </LinearLayout>

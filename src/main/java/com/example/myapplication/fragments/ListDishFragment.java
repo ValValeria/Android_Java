@@ -29,7 +29,6 @@ public class ListDishFragment extends Fragment {
     private LinearLayout linearLayout;
     private final String KEY = "KEY";
 
-
     public ListDishFragment(){
         super(R.layout.fragment_list_dish);
     }
@@ -47,13 +46,16 @@ public class ListDishFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 String txt = searchView.getQuery().toString();
 
-                linearLayout.removeAllViews();
+                if(txt.length() > 0 && !txt.trim().isEmpty()){
+                    linearLayout.removeAllViews();
+                    linearLayout.invalidate();
 
-                for (int i = 0; i < dishList.size(); i++) {
-                    Dish dish = dishList.get(i);
+                    for (int i = 0; i < dishList.size(); i++) {
+                        Dish dish = dishList.get(i);
 
-                    if(dish.getTitle().contains(txt) || dish.getDescription().contains(txt) || dish.getIngredients().contains(txt)){
-                        addCard(dish);
+                        if(dish.getTitle().contains(txt) || dish.getDescription().contains(txt) || dish.getIngredients().contains(txt)){
+                            addCard(dish, i);
+                        }
                     }
                 }
 
@@ -84,6 +86,8 @@ public class ListDishFragment extends Fragment {
 
                         if(v1.getKey().equals(v.getKey())){
                             isUnique = false;
+                        } else {
+                            addCard(v, i);
                         }
                     }
 
@@ -92,16 +96,14 @@ public class ListDishFragment extends Fragment {
                 .subscribe(v -> {
                     dishList.add(v);
                     initDishList.add(v);
-                    addCard(v);
                 });
     }
 
 
-    private void addCard(Dish dish){
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-
-        View view = layoutInflater.inflate(R.layout.card_item, linearLayout, false);
+    private void addCard(Dish dish, int i){
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.card_item, linearLayout, false);
         view.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+        view.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
         TextView title = (TextView) view.findViewById(R.id.title_card);
         title.setText(dish.getTitle());
@@ -117,6 +119,8 @@ public class ListDishFragment extends Fragment {
             navController.navigate(R.id.secondaryFragment, bundle);
         });
 
-        linearLayout.addView(view);
+        this.linearLayout.addView(view, this.linearLayout.getChildCount(), view.getLayoutParams());
+        this.linearLayout.requestLayout();
+        this.linearLayout.invalidate();
     }
 }

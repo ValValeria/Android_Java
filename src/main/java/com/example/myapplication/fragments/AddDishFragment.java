@@ -17,6 +17,7 @@ import com.example.myapplication.data.DishesViewModel;
 import com.example.myapplication.models.Dish;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -107,9 +108,12 @@ public class AddDishFragment extends Fragment {
                       Toast toast = Toast.makeText(requireActivity(), "The recipe is added", Toast.LENGTH_LONG);
                       toast.show();
 
+                      String userUid = FirebaseAuth.getInstance().getUid();
+
                       Runnable runnable = () -> {
                           String key = databaseReference.push().getKey();
                           dish.setKey(key);
+                          dish.setUserUid(userUid);
                           databaseReference.push().setValue(dish);
                       };
 
