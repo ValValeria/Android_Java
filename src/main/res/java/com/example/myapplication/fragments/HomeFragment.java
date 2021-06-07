@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,11 +38,13 @@ public class HomeFragment extends Fragment{
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private List<Dish> dishList = new ArrayList<>();
-    private ProgressBar progressBar;
     private ListView listView;
     private DishesAdapter dishesAdapter;
     private int spacing;
     private final int DISHES_MAX_COUNT = 1;
+    private View view;
+    private LinearLayout linearLayout;
+
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -62,19 +65,18 @@ public class HomeFragment extends Fragment{
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
+        linearLayout = getActivity().findViewById(R.id.linear);
+        view = LayoutInflater.from(getContext()).inflate(R.layout.empty_results, linearLayout, false);
+        linearLayout.addView(view);
+
         listView = getActivity().findViewById(R.id.dishesList);
         dishesAdapter = new DishesAdapter(view.getContext(), R.layout.card_item, dishList, navController);
         listView.setAdapter(dishesAdapter);
 
-        progressBar = getActivity().findViewById(R.id.indicator);
-
-        if(listView.getAdapter().isEmpty()){
-            listView.setVisibility(View.INVISIBLE);
-        }
-
         AtomicInteger atomicInteger = new AtomicInteger();
         atomicInteger.set(0);
 
+        View finalView = view;
         DishesViewModel.getPublishSubject()
                 .distinct()
                 .filter(v -> {
@@ -101,8 +103,12 @@ public class HomeFragment extends Fragment{
                         set.add(v);
                         dishList.clear();
                         dishList.addAll(set);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        listView.setVisibility(View.VISIBLE);
+                    }
+
+                    if(finalView != null){
+                        linearLayout.removeView(finalView);
+                        linearLayout.invalidate();
+                        linearLayout.requestLayout();
                     }
 
                     addPostCount(atomicInteger.get());

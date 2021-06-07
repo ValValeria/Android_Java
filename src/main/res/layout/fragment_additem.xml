@@ -22,7 +22,8 @@
             android:textAlignment="center"
             android:layout_gravity="center"
             android:textAppearance="?attr/textAppearanceHeadline1"
-            style="@style/h1"
+            android:textAllCaps="true"
+            style="@style/h2"
             />
 
         <com.google.android.material.textfield.TextInputLayout

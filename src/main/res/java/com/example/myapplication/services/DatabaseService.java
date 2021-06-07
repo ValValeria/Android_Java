@@ -45,15 +45,13 @@ public class DatabaseService extends Service {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         deleteAction.subscribe(v -> {
-             databaseReference.child(v.getKey()).removeValue((error, ref) -> {
-                  Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT);
-             });
+             databaseReference.child(v.getKey());
+             Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT);
         });
 
         updateAction.subscribe(v -> {
-            databaseReference.child(v.getKey()).setValue(v)
-                    .addOnSuccessListener(aVoid -> Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT))
-                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Fail to update", Toast.LENGTH_SHORT));
+            databaseReference.child(v.getKey()).setValue(v);
+            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT);
         });
 
         ValueEventListener valueEventListener = new ValueEventListener() {

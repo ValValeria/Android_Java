@@ -2,6 +2,7 @@ package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import com.example.myapplication.models.Dish;
 import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ListDishFragment extends Fragment {
@@ -28,6 +30,7 @@ public class ListDishFragment extends Fragment {
     private NavController navController;
     private LinearLayout linearLayout;
     private final String KEY = "KEY";
+    private View view;
 
     public ListDishFragment(){
         super(R.layout.fragment_list_dish);
@@ -39,24 +42,39 @@ public class ListDishFragment extends Fragment {
 
         linearLayout = getActivity().findViewById(R.id.search_results);
 
+        addNoResultsView();
+
         SearchView searchView = getActivity().findViewById(R.id.search);
         searchView.focusSearch(View.FOCUS_UP);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 String txt = searchView.getQuery().toString();
+                AtomicInteger atomicInteger = new AtomicInteger(0);
 
-                if(txt.length() > 0 && !txt.trim().isEmpty()){
-                    linearLayout.removeAllViews();
-                    linearLayout.invalidate();
+                linearLayout.removeAllViews();
+                linearLayout.invalidate();
 
-                    for (int i = 0; i < dishList.size(); i++) {
-                        Dish dish = dishList.get(i);
+                List<Dish> dishList1 = new ArrayList<>();
 
+                for (int i = 0; i < dishList1.size(); i++) {
+                    Dish dish = dishList1.get(i);
+
+                    if(txt.length() > 0 && !txt.trim().isEmpty()){
                         if(dish.getTitle().contains(txt) || dish.getDescription().contains(txt) || dish.getIngredients().contains(txt)){
-                            addCard(dish, i);
+                            addCard(dish);
                         }
+                    } else {
+                        addCard(dish);
                     }
+
+                    atomicInteger.incrementAndGet();
+                }
+
+                if(atomicInteger.get() == 0){
+                    addNoResultsView();
+                } else {
+                    removeNoResultsView();
                 }
 
                 return true;
@@ -86,8 +104,6 @@ public class ListDishFragment extends Fragment {
 
                         if(v1.getKey().equals(v.getKey())){
                             isUnique = false;
-                        } else {
-                            addCard(v, i);
                         }
                     }
 
@@ -96,11 +112,16 @@ public class ListDishFragment extends Fragment {
                 .subscribe(v -> {
                     dishList.add(v);
                     initDishList.add(v);
+                    removeNoResultsView();
+
+                    addCard(v);
+
+                    Log.e("ListDishFragment", "Data is loading");
                 });
     }
 
 
-    private void addCard(Dish dish, int i){
+    private void addCard(Dish dish){
         View view = LayoutInflater.from(getContext()).inflate(R.layout.card_item, linearLayout, false);
         view.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
         view.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -119,8 +140,23 @@ public class ListDishFragment extends Fragment {
             navController.navigate(R.id.secondaryFragment, bundle);
         });
 
-        this.linearLayout.addView(view, this.linearLayout.getChildCount(), view.getLayoutParams());
+        this.linearLayout.addView(view);
         this.linearLayout.requestLayout();
         this.linearLayout.invalidate();
+
+        Log.e("ListDishFragment", "Adding a view to the search page");
+    }
+
+    private void addNoResultsView(){
+        view = LayoutInflater.from(getContext()).inflate(R.layout.empty_results, linearLayout, false);
+        linearLayout.addView(view);
+    }
+
+    private void removeNoResultsView(){
+        if(view != null && linearLayout.indexOfChild(view) != -1){
+           linearLayout.removeView(view);
+           linearLayout.requestLayout();
+           linearLayout.invalidate();
+        }
     }
 }
